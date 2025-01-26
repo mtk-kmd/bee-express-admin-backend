@@ -1,0 +1,27 @@
+name: Docker Compose Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Create .env file
+        run: |
+          echo "CI_PROJECT_NAME=${{ github.event.repository.name }}" >> .env
+          echo "CI_COMMIT_BRANCH=${{ github.ref_name }}" >> .env
+
+      - name: Build and Deploy with Docker Compose
+        run: |
+          docker-compose down || true
+          docker-compose up -d

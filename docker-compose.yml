@@ -9,6 +9,7 @@ services:
     ports:
       - 8002:8000
     restart: always
+
 networks:
   server:
     external: true

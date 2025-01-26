@@ -30,6 +30,10 @@ jobs:
           echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
           echo "REF_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
 
+      - name: Create external network
+        run: |
+          docker network create server || echo "Network 'server' already exists"
+
       - name: Build Docker Image
         run: |
           docker build -t mtk246/${{ env.REPO_NAME }}:${{ env.REF_NAME }} .

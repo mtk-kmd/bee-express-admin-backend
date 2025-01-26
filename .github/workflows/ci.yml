@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   build:
@@ -20,7 +21,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t mtk246/${{ github.event.repository.name }}:${{ github.sha }} .
+          docker build -t my-image .
 
       - name: Run Docker Compose
         run: |

@@ -1,0 +1,27 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        run: |
+          docker --version
+          docker-compose --version
+
+      - name: Build Docker Image
+        run: |
+          docker build -t mtk246/${{ github.event.repository.name }}:${{ github.sha }} .
+
+      - name: Run Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up -d

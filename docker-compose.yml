@@ -2,8 +2,8 @@ version: '3.3'
 
 services:
   service:
-    image: "mtk246/${{ github.event.repository.name}}:${{ github.ref_name }}"
-    container_name: "${{ github.event.repository.name}}-${{ github.ref_name }}"
+    image: "mtk246/${REPO_NAME}:${REF_NAME}"
+    container_name: "${REPO_NAME}-${REF_NAME}"
     networks:
       - server
     ports:

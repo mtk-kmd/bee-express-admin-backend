@@ -2,8 +2,8 @@ version: '3.3'
 
 services:
   service:
-    image: "mtk246/${CI_PROJECT_NAME}:${CI_COMMIT_BRANCH}"
-    container_name: "${CI_PROJECT_NAME}-${CI_COMMIT_BRANCH}"
+    image: "mtk246/${{ github.event.repository.name}}:${{ github.ref_name }}"
+    container_name: "${{ github.event.repository.name}}-${{ github.ref_name }}"
     networks:
       - server
     ports:

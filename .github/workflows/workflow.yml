@@ -39,7 +39,13 @@ jobs:
             git fetch origin
             git checkout ${{ github.ref_name }}
             git pull origin ${{ github.ref_name }}
+
+          # Set environment variables
             echo "REPO_NAME=${{ github.event.repository.name }}" > .env
             echo "REF_NAME=${{ github.ref_name }}" >> .env
+
+          # Build the Docker image locally
+            docker build -t mtk246/${{ github.event.repository.name }}:${{ github.ref_name }} .
+
             docker-compose --env-file .env down || true
             docker-compose --env-file .env up -d

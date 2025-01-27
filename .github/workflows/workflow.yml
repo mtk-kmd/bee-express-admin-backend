@@ -37,9 +37,10 @@ jobs:
 
       - name: Set up Tailscale VPN
         run: |
-          curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal_amd64.deb -o tailscale.deb
-          sudo dpkg -i tailscale.deb
-          sudo apt-get install -f
+          curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/gpg | sudo tee /etc/apt/trusted.gpg.d/tailscale.asc
+          echo "deb https://pkgs.tailscale.com/stable/ubuntu focal main" | sudo tee /etc/apt/sources.list.d/tailscale.list
+          sudo apt-get update
+          sudo apt-get install -y tailscale
           sudo tailscale up --authkey=${{ secrets.TAILSCALE_AUTH_KEY }} --hostname=github-actions
 
       - name: SSH to server and deploy

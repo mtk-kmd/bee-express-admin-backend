@@ -35,7 +35,7 @@ jobs:
         run: |
           docker push mtk246/${{ github.event.repository.name }}:${{ github.sha }}
 
-      - name: name: Set up Tailscale VPN
+      - name: Set up Tailscale VPN
         run: |
           curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal_amd64.deb -o tailscale.deb
           sudo dpkg -i tailscale.deb

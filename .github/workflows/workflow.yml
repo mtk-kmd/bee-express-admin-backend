@@ -41,7 +41,6 @@ jobs:
             git pull origin ${{ github.ref_name }}
             echo "REPO_NAME=${{ github.event.repository.name }}" > .env
             echo "REF_NAME=${{ github.ref_name }}" >> .env
-            docker buildx build --platform linux/amd64 -t mtk246/${{ github.event.repository.name }}:${{ github.ref_name }} .
-            docker push mtk246/${{ github.event.repository.name }}:${{ github.ref_name }}
+            docker buildx build --platform linux/amd64 -t mtk246/${{ github.event.repository.name }}:${{ github.ref_name }} --load .
             docker-compose --env-file .env down || true
             docker-compose --env-file .env up -d

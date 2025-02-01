@@ -18,6 +18,9 @@ model User {
   user_name String   @unique
   user_password String
   role  ROLE    @default(USER)
+  sender_info SenderInfo[]
+  receiver_info  ReceiverInfo[]
+  package Package[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -25,4 +28,55 @@ model User {
 enum ROLE {
     USER
     ADMIN
+}
+
+model SenderInfo {
+    sender_id   Int @id @default(autoincrement())
+    sender_name String
+    contact_number  Int
+    address String
+    package Package @relation(fields: [package_id], references: [package_id])
+    package_id Int
+    user User @relation(fields: [user_id], references: [id])
+    user_id Int
+    createdAt DateTime  @default(now())
+    updatedAt   DateTime    @default(now())
+}
+
+model ReceiverInfo {
+    receiver_id Int @id @default(autoincrement())
+    receiver_name   String
+    contact_number  Int
+    address String
+    package Package @relation(fields: [package_id], references: [package_id])
+    package_id Int
+    user User @relation(fields: [user_id], references: [id])
+    user_id Int
+    createdAt DateTime  @default(now())
+    updatedAt   DateTime    @default(now())
+}
+
+model Package{
+    package_id  Int @id @default(autoincrement())
+    package_type PackageType @relation(fields: [package_type_id], references: [package_type_id])
+    package_type_id Int
+    description String
+    user User @relation(fields: [user_id], references: [id])
+    user_id Int
+    receiver_info ReceiverInfo[]
+    sender_info SenderInfo[]
+    weight  Float
+    length  Float
+    height  Float
+    width   Float
+    createdAt DateTime  @default(now())
+    updatedAt   DateTime    @default(now())
+}
+
+model PackageType{
+    package_type_id Int @id @default(autoincrement())
+    package_type_name   String
+    package Package[]
+    createdAt DateTime  @default(now())
+    updatedAt   DateTime    @default(now())
 }

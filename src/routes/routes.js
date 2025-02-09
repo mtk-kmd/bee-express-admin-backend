@@ -6,6 +6,7 @@ const loginController = require('../../Controller/loginController');
 const packageController = require('../../Controller/packageController');
 const sendRecController = require('../../Controller/sendRecController');
 const deliveryController = require('../../Controller/deliveryController');
+const rcWebhookController = require('../../Controller/rcWebhookController');
 const { verifyToken } = require('../../middlewares/authMiddleware');
 router.get("/hello", helloController.hello);
 
@@ -34,5 +35,8 @@ router.get("/getReceiver", verifyToken,sendRecController.getReceiver);
 router.get("/getDelivery", deliveryController.get);
 router.post("/acceptDelivery", verifyToken, deliveryController.acceptDelivery);
 router.put("/updateDeliveryStatus", verifyToken, deliveryController.updateDeliveryStatus);
+
+// RC Webhook
+router.post("/rcWebhook", rcWebhookController.post);
 
 exports.api_router = router;

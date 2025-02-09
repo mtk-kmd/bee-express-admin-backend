@@ -1,9 +1,11 @@
+const axios = require("axios");
+
 exports.post = async (req, res) => {
     const { text, user_name } = req.body;
 
-    if (user_name === "packageBot") {
-        return res.sendStatus(200);
-    }
+    // if (user_name === "packageBot") {
+    //     return res.sendStatus(200);
+    // }
 
     const match = text.match(/track (\w+)/);
     if (match) {
@@ -12,6 +14,8 @@ exports.post = async (req, res) => {
         try {
             const response = await axios.get(`https://be-dev-api.mtktechlab.com/api/getPackages?package_id=${packageId}`);
             const packageInfo = response.data;
+
+            console.log(packageInfo);
 
             const reply = `Package ID: ${packageInfo.result.package_id}\npackage_type_name: ${packageInfo.result.package_type.package_type_name}`;
             return res.json({ text: reply });

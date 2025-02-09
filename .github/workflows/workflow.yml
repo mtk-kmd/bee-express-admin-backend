@@ -32,6 +32,7 @@ jobs:
           echo "DB_PASS=mtkMTK123" >> .env
           echo "DB_NAME=bee_express" >> .env
           echo "SERVER_PORT=9000" >> .env
+          echo "DATABASE_URL='postgresql://mtk246:mtkMTK123@100.109.254.2:5432/bee_express?schema=public'" >> .env
 
       # Step 3: SSH to server and deploy
       - name: SSH to server and deploy

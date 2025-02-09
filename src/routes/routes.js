@@ -37,6 +37,6 @@ router.post("/acceptDelivery", verifyToken, deliveryController.acceptDelivery);
 router.put("/updateDeliveryStatus", verifyToken, deliveryController.updateDeliveryStatus);
 
 // RC Webhook
-router.post("/rcWebhook", rcWebhookController.post);
+router.post("/webhook", rcWebhookController.post);
 
 exports.api_router = router;

@@ -5,6 +5,7 @@ const userController = require('../../Controller/userController');
 const loginController = require('../../Controller/loginController');
 const packageController = require('../../Controller/packageController');
 const sendRecController = require('../../Controller/sendRecController');
+const deliveryController = require('../../Controller/deliveryController');
 const { verifyToken } = require('../../middlewares/authMiddleware');
 router.get("/hello", helloController.hello);
 
@@ -28,5 +29,10 @@ router.post("/createPackageType", verifyToken, packageController.createPackgeTyp
 // Send Rec Management
 router.get("/getSender", verifyToken,sendRecController.getSender);
 router.get("/getReceiver", verifyToken,sendRecController.getReceiver);
+
+// Delivery Management
+router.get("/getDelivery", deliveryController.get);
+router.post("/acceptDelivery", verifyToken, deliveryController.acceptDelivery);
+router.put("/updateDeliveryStatus", verifyToken, deliveryController.updateDeliveryStatus);
 
 exports.api_router = router;

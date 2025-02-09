@@ -21,6 +21,7 @@ model User {
   sender_info SenderInfo[]
   receiver_info  ReceiverInfo[]
   package Package[]
+  tracking Tracking[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -28,6 +29,7 @@ model User {
 enum ROLE {
     USER
     ADMIN
+    COURIER
 }
 
 model SenderInfo {
@@ -65,6 +67,8 @@ model Package{
     user_id Int
     receiver_info ReceiverInfo[]
     sender_info SenderInfo[]
+    delivery Delivery? @relation(fields: [delivery_id], references: [delivery_id])
+    delivery_id Int?
     weight  Float
     length  Float
     height  Float
@@ -79,4 +83,33 @@ model PackageType{
     package Package[]
     createdAt DateTime  @default(now())
     updatedAt   DateTime    @default(now())
+}
+
+model Delivery{
+    delivery_id Int @id @default(autoincrement())
+    priority String
+    tracking Tracking @relation(fields: [tracking_id], references: [tracking_id])
+    tracking_id Int
+    package Package[]
+    delivery_status_log DeliveryStatusLog[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+}
+
+model Tracking{
+    tracking_id Int @id @default(autoincrement())
+    courier User @relation(fields: [courier_id], references: [id])
+    courier_id Int
+    delivery Delivery[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+}
+
+model DeliveryStatusLog{
+    status_log_id Int @id @default(autoincrement())
+    status Int
+    delivery Delivery @relation(fields: [delivery_id], references: [delivery_id])
+    delivery_id Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
 }

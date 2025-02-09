@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 const { response } = require('../utils/response');
 
 exports.get = async (req, res) => {
-    const { package_id } = req.query;
+    const { package_id, user_id } = req.query;
 
     try {
         if (package_id) {
@@ -11,13 +11,51 @@ exports.get = async (req, res) => {
                 where: { package_id: parseInt(package_id) },
                 include: {
                     package_type: true,
+                    receiver_info: true,
+                    sender_info: true,
+                    delivery: {
+                        select: {
+                            delivery_id: true,
+                            priority: true,
+                            createdAt: true,
+                            updatedAt: true
+                        }
+                    }
                 },
             });
             response(res, packageData);
+        } else if (user_id) {
+            const packages = await prisma.package.findMany({
+                where: { user_id: parseInt(user_id) },
+                include: {
+                    package_type: true,
+                    receiver_info: true,
+                    sender_info: true,
+                    delivery: {
+                        select: {
+                            delivery_id: true,
+                            priority: true,
+                            createdAt: true,
+                            updatedAt: true
+                        }
+                    }
+                },
+            });
+            response(res, packages);
         } else {
             const packages = await prisma.package.findMany({
                 include: {
                     package_type: true,
+                    receiver_info: true,
+                    sender_info: true,
+                    delivery: {
+                        select: {
+                            delivery_id: true,
+                            priority: true,
+                            createdAt: true,
+                            updatedAt: true
+                        }
+                    }
                 },
             });
             response(res, packages);

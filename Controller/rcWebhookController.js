@@ -10,7 +10,7 @@ exports.post = async (req, res) => {
         const packageId = match[1];
 
         try {
-            const response = await axios.get(`https://be-dev-api.mtktechlab.com/api/getPackages?package_id${packageId}`);
+            const response = await axios.get(`https://be-dev-api.mtktechlab.com/api/getPackages?package_id=${packageId}`);
             const packageInfo = response.data;
 
             const reply = `Package ID: ${packageInfo.result.package_id}\npackage_type_name: ${packageInfo.result.package_type.package_type_name}`;

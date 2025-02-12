@@ -1,7 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { response } = require('../utils/response');
-const { connect } = require('db-migrate-mysql');
 
 exports.get = async (req, res) => {
     const { delivery_id } = req.query;

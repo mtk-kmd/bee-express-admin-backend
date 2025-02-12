@@ -17,11 +17,13 @@ model User {
   id       Int      @id @default(autoincrement())
   user_name String   @unique
   user_password String
+  email String @unique
   role  ROLE    @default(USER)
   sender_info SenderInfo[]
   receiver_info  ReceiverInfo[]
   package Package[]
   tracking Tracking[]
+  stripe_acc_id String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

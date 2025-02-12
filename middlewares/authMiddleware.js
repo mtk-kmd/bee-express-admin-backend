@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-// Middleware to verify JWT token
-exports.verifyToken = (req, res, next) => {
+exports.verifyToken = async (req, res, next) => {
     const token = req.headers.authorization;
 
     if (!token) {
@@ -12,17 +13,35 @@ exports.verifyToken = (req, res, next) => {
 
     const tokenWithoutBearer = token.replace('Bearer ', '');
 
-    jwt.verify(tokenWithoutBearer, 'secret_key', (err, decoded) => {
-        console.log(decoded);
-        if (err) {
+    try {
+        const decoded = jwt.verify(tokenWithoutBearer, 'secret_key');
+
+        // Fetch user details from database
+        const user = await prisma.user.findUnique({
+            where: { id: decoded.id },
+            select: {
+                id: true,
+                user_name: true,
+                role: true,
+                email: true,
+            }
+        });
+
+        if (!user) {
             return res.status(401).json({
-                message: 'Invalid token.'
+                message: 'User not found.'
             });
         }
 
-        req.user = decoded;
+        req.user = user;
         next();
-    });
+    } catch (err) {
+        return res.status(401).json({
+            message: 'Invalid token.'
+        });
+    } finally {
+        await prisma.$disconnect();
+    }
 };
 
 module.exports = exports;

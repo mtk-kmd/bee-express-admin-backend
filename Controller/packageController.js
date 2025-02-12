@@ -14,15 +14,32 @@ exports.get = async (req, res) => {
                     receiver_info: true,
                     sender_info: true,
                     delivery: {
-                        select: {
-                            delivery_id: true,
-                            priority: true,
-                            createdAt: true,
-                            updatedAt: true
+                        include: {
+                            tracking: {
+                                include: {
+                                    courier: {
+                                        select: {
+                                            id: true,
+                                            user_name: true,
+                                            role: true,
+                                            stripe_acc_id: true
+                                        }
+                                    }
+                                }
+                            }
                         }
-                    }
+                    },
+                    user: {
+                        select: {
+                            id: true,
+                            user_name: true,
+                            role: true,
+                            stripe_acc_id: true
+                        }
+                    },
                 },
             });
+
             response(res, packageData);
         } else if (user_id) {
             const packages = await prisma.package.findMany({
@@ -32,13 +49,29 @@ exports.get = async (req, res) => {
                     receiver_info: true,
                     sender_info: true,
                     delivery: {
-                        select: {
-                            delivery_id: true,
-                            priority: true,
-                            createdAt: true,
-                            updatedAt: true
+                        include: {
+                            tracking: {
+                                include: {
+                                    courier: {
+                                        select: {
+                                            id: true,
+                                            user_name: true,
+                                            role: true,
+                                            stripe_acc_id: true
+                                        }
+                                    }
+                                }
+                            }
                         }
-                    }
+                    },
+                    user: {
+                        select: {
+                            id: true,
+                            user_name: true,
+                            role: true,
+                            stripe_acc_id: true
+                        }
+                    },
                 },
             });
             response(res, packages);
@@ -49,11 +82,27 @@ exports.get = async (req, res) => {
                     receiver_info: true,
                     sender_info: true,
                     delivery: {
+                        include: {
+                            tracking: {
+                                include: {
+                                    courier: {
+                                        select: {
+                                            id: true,
+                                            user_name: true,
+                                            role: true,
+                                            stripe_acc_id: true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    user: {
                         select: {
-                            delivery_id: true,
-                            priority: true,
-                            createdAt: true,
-                            updatedAt: true
+                            id: true,
+                            user_name: true,
+                            role: true,
+                            stripe_acc_id: true
                         }
                     }
                 },

@@ -6,7 +6,8 @@ const loginController = require('../../Controller/loginController');
 const packageController = require('../../Controller/packageController');
 const sendRecController = require('../../Controller/sendRecController');
 const deliveryController = require('../../Controller/deliveryController');
-const rcWebhookController = require('../../Controller/rcWebhookController');
+const rcController = require('../../Controller/rcController');
+const stripeController = require('../../Controller/stripeController');
 const { verifyToken } = require('../../middlewares/authMiddleware');
 router.get("/hello", helloController.hello);
 
@@ -16,7 +17,6 @@ router.post("/login", loginController.login);
 router.get("/getUsers", verifyToken, userController.get);
 router.post("/createUser", userController.createUser);
 router.put("/updateUser", verifyToken, userController.update);
-router.get("/getMyInfo", verifyToken, userController.getMe);
 
 // Package Management
 router.get("/getPackages", packageController.get);
@@ -36,7 +36,11 @@ router.get("/getDelivery", deliveryController.get);
 router.post("/acceptDelivery", verifyToken, deliveryController.acceptDelivery);
 router.put("/updateDeliveryStatus", verifyToken, deliveryController.updateDeliveryStatus);
 
-// RC Webhook
-router.post("/webhook", rcWebhookController.post);
+// RC Controller
+router.post("/webhook", rcController.post);
+router.post("/rc-login", verifyToken, rcController.rcLogin);
+
+// Stripe Controller
+router.post("/createStripePayout", verifyToken, stripeController.createPayout);
 
 exports.api_router = router;

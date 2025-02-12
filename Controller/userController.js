@@ -7,15 +7,15 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 exports.get = async (req, res) => {
-    const { username } = req.query;
+    const { user_id } = req.query;
 
     try {
         let user = null;
 
-        if (username) {
+        if (user_id) {
             user = await prisma.user.findUnique({
                 where: {
-                    user_name: username,
+                    id: parseInt(user_id),
                 },
             });
 
@@ -40,20 +40,8 @@ exports.get = async (req, res) => {
     }
 };
 
-exports.getMe = async (req, res) => {
-    const { user_id } = req.query;
-
-    const result = "SELECT * FROM sch_user_management.user_tbl WHERE user_id = $1";
-
-    const rows = await query(result, [user_id]);
-
-    delete rows[0]?.user_password;
-
-    response(res, rows);
-}
-
 exports.createUser = async (req, res) => {
-    const { username, password, role } = req.body;
+    const { username, password, role, email } = req.body;
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -63,6 +51,7 @@ exports.createUser = async (req, res) => {
                 user_name: username,
                 user_password: hashedPassword,
                 role: role,
+                email: email
             },
         });
 

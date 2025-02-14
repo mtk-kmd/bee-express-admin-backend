@@ -33,6 +33,15 @@ jobs:
           echo "DB_NAME=bee_express" >> .env
           echo "SERVER_PORT=9000" >> .env
           echo "DATABASE_URL='postgresql://mtk246:mtkMTK123@100.109.254.2:5432/bee_express?schema=public'" >> .env
+          echo "ROCKETCHAT_URL='https://chat.mtktechlab.com'" >> .env
+          echo "LOCAL_HOST='http://localhost'" >> .env
+          echo "STRIPE_SECRET_KEY='sk_test_51Odu8fJDHoTbxcrY0mAToyA3o75u3siURwV0XVjNKjEPkDnq9lrRhupWuQfJFUtoRV1RtsfiLtTcs0VVe0tf6w6J002Hp5ymT3'" >> .env
+          echo "MINIO_ENDPOINT='file-api.mtktechlab.com'" >> .env
+          echo "MINIO_PORT=9000" >> .env
+          echo "MINIO_USE_SSL=true" >> .env
+          echo "MINIO_ACCESS_KEY=access_key_1" >> .env
+          echo "MINIO_SECRET_KEY=2mU5esnr1IUycUkaWOFTY7UyDV2RVZtndAsDLFbV" >> .env
+          echo "MINIO_BUCKET_NAME=bee-express" >> .env
 
       # Step 3: SSH to server and deploy
       - name: SSH to server and deploy

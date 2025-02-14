@@ -93,6 +93,7 @@ exports.rcLogin = async (req, res) => {
                 );
 
                 if (response) {
+                    console.log(response);
                     const loginResponse = await axios.post(
                         process.env.ROCKETCHAT_URL + "/api/v1/login",
                         {
@@ -111,15 +112,12 @@ exports.rcLogin = async (req, res) => {
                     });
                 }
             } catch (e) {
-
-    console.log(req.user);
-                // console.log(e);
-
                 return res.status(400).json({
                     message: e.response.data.errorType,
                 });
             }
-        } else {
+        }
+        else {
             return res.status(400).json({
                 message: "Invalid User Account",
             });

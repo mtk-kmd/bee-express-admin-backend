@@ -8,6 +8,7 @@ const sendRecController = require('../../Controller/sendRecController');
 const deliveryController = require('../../Controller/deliveryController');
 const rcController = require('../../Controller/rcController');
 const stripeController = require('../../Controller/stripeController');
+const minioController = require('../../Controller/minioController');
 const { verifyToken } = require('../../middlewares/authMiddleware');
 router.get("/hello", helloController.hello);
 
@@ -42,5 +43,10 @@ router.post("/rc-login", verifyToken, rcController.rcLogin);
 
 // Stripe Controller
 router.post("/createStripePayout", verifyToken, stripeController.createPayout);
+
+// Minio Controller
+router.post('/upload', verifyToken, minioController.uploadFile);
+router.get('/file/:fileName', verifyToken, minioController.getFile);
+router.delete('/file/:fileName', verifyToken, minioController.deleteFile);
 
 exports.api_router = router;

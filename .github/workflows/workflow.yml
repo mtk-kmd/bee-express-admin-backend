@@ -31,7 +31,7 @@ jobs:
           echo "DB_USER=mtk246" >> .env
           echo "DB_PASS=mtkMTK123" >> .env
           echo "DB_NAME=bee_express" >> .env
-          echo "SERVER_PORT=9000" >> .env
+          echo "SERVER_PORT=8000" >> .env
           echo "DATABASE_URL='postgresql://mtk246:mtkMTK123@100.109.254.2:5432/bee_express?schema=public'" >> .env
           echo "ROCKETCHAT_URL='https://chat.mtktechlab.com'" >> .env
           echo "LOCAL_HOST='http://localhost'" >> .env
@@ -62,7 +62,7 @@ jobs:
             echo "DB_USER=mtk246" >> .env
             echo "DB_PASS=mtkMTK123" >> .env
             echo "DB_NAME=bee_express" >> .env
-            echo "SERVER_PORT=9000" >> .env
+            echo "SERVER_PORT=8000" >> .env
             echo "DATABASE_URL='postgresql://mtk246:mtkMTK123@100.109.254.2:5432/bee_express?schema=public'" >> .env
             echo "ROCKETCHAT_URL='https://chat.mtktechlab.com'" >> .env
             echo "LOCAL_HOST='http://localhost'" >> .env

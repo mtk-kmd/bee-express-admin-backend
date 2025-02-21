@@ -40,6 +40,8 @@ router.put("/updateDeliveryStatus", verifyToken, deliveryController.updateDelive
 // RC Controller
 router.post("/webhook", rcController.post);
 router.post("/rc-login", verifyToken, rcController.rcLogin);
+router.post('/createDM', verifyToken, rcController.createDirectMessage);
+router.get("/getUnReadMessages", verifyToken, rcController.getUnReadMessages);
 
 // Stripe Controller
 router.post("/createStripePayout", verifyToken, stripeController.createPayout);

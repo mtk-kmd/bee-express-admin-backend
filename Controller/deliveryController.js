@@ -3,11 +3,61 @@ const prisma = new PrismaClient();
 const { response } = require('../utils/response');
 
 exports.get = async (req, res) => {
-    const { delivery_id } = req.query;
+    const { delivery_id, user_id, courier_id } = req.query;
     try {
         if (delivery_id) {
             const data = await prisma.delivery.findUnique({
                 where: { delivery_id: parseInt(delivery_id) }
+            });
+            response(res, data);
+        } else if (user_id) {
+            const data = await prisma.delivery.findMany({
+                where: {
+                    package: {
+                        some: {
+                            user_id: parseInt(user_id)
+                        }
+                    }
+                },
+                include: {
+                    package: true,
+                    tracking: {
+                        include: {
+                            courier: {
+                                select: {
+                                    id: true,
+                                    user_name: true,
+                                    role: true,
+                                }
+                            }
+                        }
+                    },
+                    delivery_status_log: true
+                }
+            });
+            response(res, data);
+        } else if (courier_id) {
+            const data = await prisma.delivery.findMany({
+                where: {
+                    tracking: {
+                        courier_id: parseInt(courier_id)
+                    }
+                },
+                include: {
+                    package: true,
+                    tracking: {
+                        include: {
+                            courier: {
+                                select: {
+                                    id: true,
+                                    user_name: true,
+                                    role: true,
+                                }
+                            }
+                        }
+                    },
+                    delivery_status_log: true
+                }
             });
             response(res, data);
         } else {

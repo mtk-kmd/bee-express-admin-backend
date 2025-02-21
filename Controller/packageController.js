@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 const { response } = require('../utils/response');
 
 exports.get = async (req, res) => {
-    const { package_id, user_id } = req.query;
+    const { package_id, user_id, courier_id } = req.query;
 
     try {
         if (package_id) {
@@ -72,6 +72,46 @@ exports.get = async (req, res) => {
                             stripe_acc_id: true
                         }
                     },
+                },
+            });
+            response(res, packages);
+        } else if (courier_id) {
+            const packages = await prisma.package.findMany({
+                where: {
+                    delivery: {
+                        tracking: {
+                            courier_id: parseInt(courier_id)
+                        }
+                    }
+                },
+                include: {
+                    package_type: true,
+                    receiver_info: true,
+                    sender_info: true,
+                    delivery: {
+                        include: {
+                            tracking: {
+                                include: {
+                                    courier: {
+                                        select: {
+                                            id: true,
+                                            user_name: true,
+                                            role: true,
+                                            stripe_acc_id: true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    user: {
+                        select: {
+                            id: true,
+                            user_name: true,
+                            role: true,
+                            stripe_acc_id: true
+                        }
+                    }
                 },
             });
             response(res, packages);

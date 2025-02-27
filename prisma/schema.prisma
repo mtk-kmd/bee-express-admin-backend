@@ -17,7 +17,15 @@ model User {
   id       Int      @id @default(autoincrement())
   user_name String   @unique
   user_password String
+  full_name String?
+  email String @unique
+  phone_number Int?
   role  ROLE    @default(USER)
+  sender_info SenderInfo[]
+  receiver_info  ReceiverInfo[]
+  package Package[]
+  tracking Tracking[]
+  stripe_acc_id String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -25,4 +33,88 @@ model User {
 enum ROLE {
     USER
     ADMIN
+    COURIER
+}
+
+model SenderInfo {
+    sender_id   Int @id @default(autoincrement())
+    sender_name String
+    contact_number  Int
+    address String
+    package Package @relation(fields: [package_id], references: [package_id])
+    package_id Int
+    user User @relation(fields: [user_id], references: [id])
+    user_id Int
+    createdAt DateTime  @default(now())
+    updatedAt   DateTime    @default(now())
+}
+
+model ReceiverInfo {
+    receiver_id Int @id @default(autoincrement())
+    receiver_name   String
+    contact_number  Int
+    address String
+    package Package @relation(fields: [package_id], references: [package_id])
+    package_id Int
+    user User @relation(fields: [user_id], references: [id])
+    user_id Int
+    createdAt DateTime  @default(now())
+    updatedAt   DateTime    @default(now())
+}
+
+model Package{
+    package_id  Int @id @default(autoincrement())
+    package_type PackageType @relation(fields: [package_type_id], references: [package_type_id])
+    package_type_id Int
+    description String
+    user User @relation(fields: [user_id], references: [id])
+    user_id Int
+    receiver_info ReceiverInfo[]
+    sender_info SenderInfo[]
+    delivery Delivery? @relation(fields: [delivery_id], references: [delivery_id])
+    delivery_id Int?
+    weight  Float
+    length  Float
+    height  Float
+    width   Float
+    createdAt DateTime  @default(now())
+    updatedAt   DateTime    @default(now())
+}
+
+model PackageType{
+    package_type_id Int @id @default(autoincrement())
+    package_type_name   String
+    package Package[]
+    createdAt DateTime  @default(now())
+    updatedAt   DateTime    @default(now())
+}
+
+model Delivery{
+    delivery_id Int @id @default(autoincrement())
+    priority String
+    tracking Tracking @relation(fields: [tracking_id], references: [tracking_id])
+    tracking_id Int
+    package Package[]
+    delivery_status_log DeliveryStatusLog[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+}
+
+model Tracking{
+    tracking_id Int @id @default(autoincrement())
+    courier User @relation(fields: [courier_id], references: [id])
+    courier_id Int
+    delivery Delivery[]
+    photo_url String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+}
+
+model DeliveryStatusLog{
+    status_log_id Int @id @default(autoincrement())
+    status Int
+    delivery Delivery @relation(fields: [delivery_id], references: [delivery_id])
+    delivery_id Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
 }

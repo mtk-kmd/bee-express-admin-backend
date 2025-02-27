@@ -7,15 +7,15 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 exports.get = async (req, res) => {
-    const { username } = req.query;
+    const { user_id } = req.query;
 
     try {
         let user = null;
 
-        if (username) {
+        if (user_id) {
             user = await prisma.user.findUnique({
                 where: {
-                    user_name: username,
+                    id: parseInt(user_id),
                 },
             });
 
@@ -40,20 +40,8 @@ exports.get = async (req, res) => {
     }
 };
 
-exports.getMe = async (req, res) => {
-    const { user_id } = req.query;
-
-    const result = "SELECT * FROM sch_user_management.user_tbl WHERE user_id = $1";
-
-    const rows = await query(result, [user_id]);
-
-    delete rows[0]?.user_password;
-
-    response(res, rows);
-}
-
 exports.createUser = async (req, res) => {
-    const { username, password, role } = req.body;
+    const { username, password, role, email } = req.body;
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -63,6 +51,7 @@ exports.createUser = async (req, res) => {
                 user_name: username,
                 user_password: hashedPassword,
                 role: role,
+                email: email
             },
         });
 
@@ -77,54 +66,47 @@ exports.createUser = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const { user_id, user_name, role, name, status } = req.body;
+    const { user_id, user_name, role, name, email, phone_number } = req.body;
 
-    const obj = {
-        user_id,
-        user_name,
-        role,
-        name,
-        status,
-    };
+    try {
+        const users = await prisma.user.findMany({});
+        const user = users.find((u) => u.id === parseInt(user_id));
 
-    const getUsers = await query(
-        `SELECT * FROM sch_user_management.user_tbl WHERE user_id = $1`,
-        [obj.user_id],
-    )
-
-    if (getUsers.length > 0) {
-        // Check if the user_name already exists for a different ID
-        const getQuery = await query(
-            "SELECT * FROM sch_user_management.user_tbl WHERE user_name = $1 AND user_id != $2",
-            [user_name, user_id],
-        );
-
-        if (getQuery.length > 0) {
-            return res.status(400).json({
-                status: 400,
-                message: "User name already exists for a different user",
+        if(!user) {
+            return res.status(404).json({
+                status: 404,
+                message: "User not found",
             });
-        } else {
-            const updateQuery = "UPDATE sch_user_management.user_tbl SET user_name = $1, role = $2, name = $3, updated_at = $4, status = $5 WHERE user_id = $6";
-
-            await query(
-                updateQuery,
-                [
-                    obj.user_name,
-                    obj.role,
-                    obj.name,
-                    new Date,
-                    obj.status,
-                    obj.user_id,
-                ],
-            );
-
-            response(res, obj);
         }
-    } else {
-        return res.status(500).json({
-            status: 500,
-            message: "There is no user account with this id",
-        })
+
+        users.map((u) => {
+            if (u.user_name === user_name && u.id !== parseInt(user_id)) {
+                return res.status(400).json({
+                    status: 400,
+                    message: "User name already exists",
+                });
+            }
+        });
+
+        const updateUser = await prisma.user.update({
+            where: {
+                id: parseInt(user_id),
+            },
+            data: {
+                user_name: user_name,
+                role: role,
+                full_name: name,
+                email: email,
+                phone_number: phone_number
+            },
+        });
+
+        response(res, updateUser);
+    } catch (error) {
+        console.error('Error creating user:', error);
+        response(res, error);
+    } finally {
+        await prisma.$disconnect();
     }
+
 };

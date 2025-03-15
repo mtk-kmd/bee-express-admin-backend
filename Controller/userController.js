@@ -97,7 +97,7 @@ exports.update = async (req, res) => {
                 role: role,
                 full_name: name,
                 email: email,
-                phone_number: phone_number
+                phone_number: parseInt(phone_number)
             },
         });
 
